@@ -3,6 +3,7 @@ from google.cloud import speech
 from oauth2client.client import GoogleCredentials
 import pyaudio
 import wave
+import threading
     
  
 FORMAT = pyaudio.paInt16
