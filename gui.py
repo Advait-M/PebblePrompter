@@ -6,6 +6,8 @@ pyredb.ForgetMeNot().alert(False, "")
 
 def clearSS():
     sendSuccess.config(image=off)
+    pyredb.ForgetMeNot().alert(False, "")
+
 
 def completeTask(name):
     if name == "script":
@@ -13,7 +15,7 @@ def completeTask(name):
 
     elif name == "send":
         sendSuccess.config(image=on)
-        sendSuccess.after(5000,clearSS)
+        sendSuccess.after(400,clearSS)
 
 
 def setScript():
