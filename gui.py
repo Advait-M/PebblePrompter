@@ -2,6 +2,11 @@ from tkinter import *
 import pyredb
 
 pyredb.ForgetMeNot().start()
+pyredb.ForgetMeNot().alert(False, "")
+
+def clearSS():
+    sendSuccess.config(image=off)
+    pyredb.ForgetMeNot().alert(False, "")
 
 
 def completeTask(name):
@@ -10,14 +15,16 @@ def completeTask(name):
 
     elif name == "send":
         sendSuccess.config(image=on)
+        sendSuccess.after(400,clearSS)
 
 
 def setScript():
     # print(Script_Field.get(0.0, END))
-    pyredb.ForgetMeNot().editScript(Script_Field.get(0.0, END).strip())
-    Script_Field.config(state="disabled")
-    setS.config(state="disabled")
-    completeTask('script')
+    if len(Script_Field.get(0.0, END))!=0:
+        pyredb.ForgetMeNot().editScript(Script_Field.get(0.0, END).strip())
+        Script_Field.config(state="disabled")
+        setS.config(state="disabled")
+        completeTask('script')
 
 
 def sendToPresenter():
@@ -27,6 +34,9 @@ def sendToPresenter():
         Alert.delete(0, END)
         completeTask('send')
 
+
+def exitHandler():
+    root.destroy()
 
 root = Tk()
 off = PhotoImage(file="close-circle.gif")
@@ -47,11 +57,12 @@ Label(contact, text="Set Script:").grid(row=4, column=1)
 scriptSuccess = Label(contact, image=off)
 scriptSuccess.grid(row=4, column=2)
 
-Label(contact, text="Set Script:").grid(row=5, column=1)
+Label(contact, text="Sent Message:").grid(row=5, column=1)
 sendSuccess = Label(contact, image=off)
 sendSuccess.grid(row=5, column=2)
 
 setS = Button(home, text="Set Script", command=setScript, relief="groove")
 setS.grid(row=3, column=1)
 
+root.wm_protocol("WM_DELETE_WINDOW",exitHandler)
 home.mainloop()
