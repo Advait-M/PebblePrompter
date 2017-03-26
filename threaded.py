@@ -24,6 +24,7 @@ final = ""
 nextPos = 0
 totalScore = 0
 outOf = 0
+start = False
 original = "Wet and icy roads have led to a travel advisory for areas of central and northern Saskatchewan. Roads in central Saskatchewan are covered in ice, according to the province's Highway Hotline. Northern roads are snow-covered, and have slippery sections. Travel is not recommended for the areas of Wynyard, Kelvington and Tisdale. The following areas also have weather advisories and caution when driving is recommended:"
 def analyze(original, sub, nextPos):
     global totalScore, outOf
@@ -40,7 +41,7 @@ def analyze(original, sub, nextPos):
     outOf += 100
     print(scores)
     print(originalList[nextPos+bestI:nextPos+bestI+n])
-    if scores[0] == 0:
+    if sub.lower() == "shut down":
         print(totalScore)
         print(outOf)
         print(totalScore/outOf)
@@ -107,6 +108,7 @@ class Thread_B(threading.Thread):
         global val2
         global final
         global nextPos
+        global start
         client = speech.Client.from_service_account_json(r'Prompt-voice-d17c3c6b865a.json')
         pyredb.ForgetMeNot().start()
         while True:
@@ -135,11 +137,14 @@ class Thread_B(threading.Thread):
                     for alternative in alternatives:
                         print('Transcript: {}'.format(alternative.transcript))
                         final += " " + alternative.transcript
-                        curIndex = analyze(original, alternative.transcript, nextPos)
-                        pyredb.ForgetMeNot().editIndex(curIndex)
-                        print("c", curIndex)
-                        nextPos = curIndex + len(alternative.transcript.split())
-                        print("n", nextPos)
+                        if start:
+                            curIndex = analyze(original, alternative.transcript, nextPos)
+                            pyredb.ForgetMeNot().editIndex(curIndex)
+                            print("c", curIndex)
+                            nextPos = curIndex + len(alternative.transcript.split())
+                            print("n", nextPos)
+                        elif alternative.transcript.lower() == "begin":
+                            start = True
                 except ValueError:
                     print("RIP WORDS")
                 #print("two")
