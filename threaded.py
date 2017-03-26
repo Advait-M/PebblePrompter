@@ -109,7 +109,6 @@ class Thread_B(threading.Thread):
         global nextPos
         client = speech.Client.from_service_account_json(r'Prompt-voice-d17c3c6b865a.json')
         pyredb.ForgetMeNot().start()
-        pyredb.ForgetMeNot().getText()
         while True:
             if flag == 1:
                 if val%2 == 1:
@@ -137,6 +136,7 @@ class Thread_B(threading.Thread):
                         print('Transcript: {}'.format(alternative.transcript))
                         final += " " + alternative.transcript
                         curIndex = analyze(original, alternative.transcript, nextPos)
+                        pyredb.ForgetMeNot().editIndex(curIndex)
                         print("c", curIndex)
                         nextPos = curIndex + len(alternative.transcript.split())
                         print("n", nextPos)
