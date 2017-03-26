@@ -31,6 +31,20 @@ class ForgetMeNot:
     def addSession(self, firstName, lastName, startTime, endTime, location, clinicName):
         self.db.child(firstName + " " + lastName).set({"Start Time" : startTime, "End Time" : endTime, "Location" : location, "Clinic Name" : clinicName})
 
+    def addIndex(self, curIndex):
+        self.db.child("stuff").set({"curIndex":curIndex})
+        
+    def editIndex(self, curIndex):
+        self.db.child("stuff").update({"curIndex":curIndex})
+
+    def addScript(self, script):
+        self.db.child("scriptText").set({"text":script})
+    def editScript(self, script):
+        self.db.child("scriptText").update({"text":script})
+
+    def addAlert(self, number):
+        self.db.child("alerts").child("alert" + str(number)).set({"alert" + str(number): "done"})
+        
     def editSession(self, startTime, endTime, name, location, clinicName):
         if typeOfString == "Start Time" or typeOfString == "End Time":
             self.db.child(oldFirstName + " " + oldLastName).update({typeOfString : newString})
@@ -43,7 +57,7 @@ class ForgetMeNot:
         all_users = self.db.child("/").get()
         masterList = []
         for user in all_users.each():
-            text = (user.val())["text"]
+            text = (user.val())["curIndex"]
         print(text)
         return text
 
@@ -56,5 +70,10 @@ class ForgetMeNot:
             print(key, ":", value)
 
 if __name__ == "__main__":
-    ForgetMeNot().start()
-    ForgetMeNot().getAll()
+    a = ForgetMeNot()
+    a.start()
+    #ForgetMeNot().getText()
+    a.editIndex(4)
+    
+    a.addScript("asdasd")
+    a.addAlert(8)

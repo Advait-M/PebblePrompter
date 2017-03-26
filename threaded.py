@@ -7,6 +7,8 @@ import pyaudio
 import wave
 import threading
 import pyredb
+from fuzzywuzzy import fuzz
+import sys
     
  
 
@@ -19,6 +21,32 @@ flag = 0      #shared between Thread_A and Thread_B
 val = 0
 val2 = 0
 final = ""
+nextPos = 0
+totalScore = 0
+outOf = 0
+original = "Wet and icy roads have led to a travel advisory for areas of central and northern Saskatchewan. Roads in central Saskatchewan are covered in ice, according to the province's Highway Hotline. Northern roads are snow-covered, and have slippery sections. Travel is not recommended for the areas of Wynyard, Kelvington and Tisdale. The following areas also have weather advisories and caution when driving is recommended:"
+def analyze(original, sub, nextPos):
+    global totalScore, outOf
+    originalList = original.split()
+    subList = sub.split()
+    n = len(subList)
+    scores = []
+    for i in range(0, 15):
+        scores.append(fuzz.partial_ratio(" ".join(originalList[nextPos+i:nextPos+i+n]), sub))
+    best = max(scores)
+    #Finds the closest occurence even if 2 maxes
+    bestI = scores.index(best)
+    totalScore += best
+    outOf += 100
+    print(scores)
+    print(originalList[nextPos+bestI:nextPos+bestI+n])
+    if scores[0] == 0:
+        print(totalScore)
+        print(outOf)
+        print(totalScore/outOf)
+        input("REKT")
+    return nextPos + bestI
+
 class Thread_A(threading.Thread):
     def __init__(self, name):
         threading.Thread.__init__(self)
@@ -78,6 +106,7 @@ class Thread_B(threading.Thread):
         global val    #made global here
         global val2
         global final
+        global nextPos
         client = speech.Client.from_service_account_json(r'Prompt-voice-d17c3c6b865a.json')
         pyredb.ForgetMeNot().start()
         pyredb.ForgetMeNot().getText()
@@ -107,6 +136,10 @@ class Thread_B(threading.Thread):
                     for alternative in alternatives:
                         print('Transcript: {}'.format(alternative.transcript))
                         final += " " + alternative.transcript
+                        curIndex = analyze(original, alternative.transcript, nextPos)
+                        print("c", curIndex)
+                        nextPos = curIndex + len(alternative.transcript.split())
+                        print("n", nextPos)
                 except ValueError:
                     print("RIP WORDS")
                 #print("two")
@@ -114,10 +147,9 @@ class Thread_B(threading.Thread):
                 flag = 0
                 
                 print(final)
-
+                
 a = Thread_A("myThread_name_A")
 b = Thread_B("myThread_name_B")
-
 a.start()
 b.start()
 
