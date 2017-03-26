@@ -35,6 +35,9 @@ def sendToPresenter():
         completeTask('send')
 
 
+def exitHandler():
+    root.destroy()
+
 root = Tk()
 off = PhotoImage(file="close-circle.gif")
 on = PhotoImage(file="check-circle.gif")
@@ -61,4 +64,5 @@ sendSuccess.grid(row=5, column=2)
 setS = Button(home, text="Set Script", command=setScript, relief="groove")
 setS.grid(row=3, column=1)
 
+root.wm_protocol("WM_DELETE_WINDOW",exitHandler)
 home.mainloop()
