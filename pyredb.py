@@ -42,8 +42,11 @@ class ForgetMeNot:
     def editScript(self, script):
         self.db.child("scriptText").update({"text":script})
 
-    def addAlert(self, number):
-        self.db.child("alerts").set("true")
+    def alert(self, state):
+        if state:
+            self.db.child("alerts").set("true")
+        else:
+            self.db.child("alerts").set("false")
         
     def editSession(self, startTime, endTime, name, location, clinicName):
         if typeOfString == "Start Time" or typeOfString == "End Time":
