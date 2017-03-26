@@ -1,30 +1,57 @@
 from tkinter import *
+import pyredb
+
+pyredb.ForgetMeNot().start()
+
+
+def completeTask(name):
+    if name == "script":
+        scriptSuccess.config(image=on)
+
+    elif name == "send":
+        sendSuccess.config(image=on)
 
 
 def setScript():
-    print(Script_Field.get(0.0, END))
-
-
-def sendToFirebase():
+    # print(Script_Field.get(0.0, END))
+    pyredb.ForgetMeNot().editScript(Script_Field.get(0.0, END).strip())
+    Script_Field.config(state="disabled")
+    setS.config(state="disabled")
+    completeTask('script')
 
 
 def sendToPresenter():
-    top = Frame(root)
-    top.grid()
-    Label(top, text="Enter Message").grid()
-    Button(top,text="Send",command=).grid()
-    print("PYREBASE")
+    strrr = Alert.get()
+    if len(strrr) > 0:
+        pyredb.ForgetMeNot().alert(True, strrr)
+        Alert.delete(0, END)
+        completeTask('send')
+
 
 root = Tk()
+off = PhotoImage(file="close-circle.gif")
+on = PhotoImage(file="check-circle.gif")
 home = Frame(root)
-home.grid()
-Label(home, text="Enter Your Presentation Script").grid()
-Script_Field = Text(home)
-Script_Field.grid()
+home.grid(row=1, column=1)
+Label(home, text="Enter Your Presentation Script").grid(row=1, column=1)
+Script_Field = Text(home, height=20, width=40)
+Script_Field.grid(row=2, column=1)
+contact = Frame(root)
+contact.grid(row=1, column=2, sticky=NW)
+Label(contact, text="Enter Message").grid(row=1, column=1)
+Alert = Entry(contact, width=30)
+Alert.grid(row=2, column=1)
+Button(contact, text="Send Message to Presenter", command=sendToPresenter, relief="groove").grid(row=3, column=1)
 
+Label(contact, text="Set Script:").grid(row=4, column=1)
+scriptSuccess = Label(contact, image=off)
+scriptSuccess.grid(row=4, column=2)
 
+Label(contact, text="Set Script:").grid(row=5, column=1)
+sendSuccess = Label(contact, image=off)
+sendSuccess.grid(row=5, column=2)
 
-Button(home, text="Set Script", command=setScript).grid()
-Button(home, text="Send Message to Presenter", command=sendToPresenter).grid()
+setS = Button(home, text="Set Script", command=setScript, relief="groove")
+setS.grid(row=3, column=1)
 
 home.mainloop()
