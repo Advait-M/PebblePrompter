@@ -1,4 +1,4 @@
-#### Pebble Prompter
+# Pebble Prompter
 
 ## Inspiration
 Composed of a diverse team, consisting of both high-school and university students, we strived to create an idea that would help us in our academic endeavours. Often, during school time we are asked to give presentations or lectures in activities/classes. Personally, we have seen many fellow classmates stumble and forget parts of their desired scripts/dialogues when presenting in front of large audiences. Generally, this occurs when the speech is quite large in length. A potential solution is to record the speech and play it through an earpiece as an audio file, however this method will not compensate for pauses or diversions during the speech, which are natural. To resolve this problem, we have created Pebble Prompter.
